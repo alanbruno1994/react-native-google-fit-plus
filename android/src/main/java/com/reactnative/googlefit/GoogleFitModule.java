@@ -116,7 +116,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
                 mGoogleFitManager.disconnect(getCurrentActivity());
             }
             promise.resolve(null);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -158,7 +158,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     {
         try {
             promise.resolve(mGoogleFitManager.getActivityHistory().getActivitySamples((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -172,7 +172,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     {
         try {
             promise.resolve(mGoogleFitManager.getActivityHistory().getMoveMinutes((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -184,7 +184,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
                                 Callback successCallback) {
         try {
             mGoogleFitManager.getStepHistory().getUserInputSteps((long) startDate, (long) endDate, successCallback);
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -197,7 +197,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
                                         Promise promise) {
         try {
             promise.resolve(mGoogleFitManager.getDistanceHistory().aggregateDataByDate((long) startDate, (long) endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -212,7 +212,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             BodyHistory bodyHistory = mGoogleFitManager.getBodyHistory();
             bodyHistory.setDataType(DataType.TYPE_WEIGHT);
             promise.resolve(bodyHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -227,7 +227,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             BodyHistory bodyHistory = mGoogleFitManager.getBodyHistory();
             bodyHistory.setDataType(DataType.TYPE_HEIGHT);
             promise.resolve(bodyHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -241,7 +241,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             BodyHistory bodyHistory = mGoogleFitManager.getBodyHistory();
             bodyHistory.setDataType(DataType.TYPE_HEIGHT);
             successCallback.invoke(bodyHistory.save(heightSample));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -257,7 +257,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
 
         try {
             promise.resolve(mGoogleFitManager.getCalorieHistory().aggregateDataByDate((long) startDate, (long) endDate, basalCalculation, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -268,7 +268,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
                          Callback successCallback) {
         try {
             successCallback.invoke(mGoogleFitManager.getCalorieHistory().saveFood(foodSample));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -281,7 +281,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
                                          Promise promise) {
         try {
             promise.resolve(mGoogleFitManager.getNutritionHistory().aggregateDataByDate((long) startDate, (long) endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -294,7 +294,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             BodyHistory bodyHistory = mGoogleFitManager.getBodyHistory();
             bodyHistory.setDataType(DataType.TYPE_WEIGHT);
             successCallback.invoke(bodyHistory.save(weightSample));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -305,7 +305,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             BodyHistory bodyHistory = mGoogleFitManager.getBodyHistory();
             bodyHistory.setDataType(DataType.TYPE_WEIGHT);
             successCallback.invoke(bodyHistory.delete(options));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -316,7 +316,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             BodyHistory bodyHistory = mGoogleFitManager.getBodyHistory();
             bodyHistory.setDataType(DataType.TYPE_HEIGHT);
             successCallback.invoke(bodyHistory.delete(options));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -325,7 +325,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void isAvailable(Callback errorCallback, Callback successCallback) { // true if GoogleFit installed
         try {
             successCallback.invoke(isAvailableCheck());
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -334,7 +334,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void isEnabled(Callback errorCallback, Callback successCallback) { // true if permission granted
         try {
             successCallback.invoke(isEnabledCheck());
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -345,7 +345,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
         try {
             Intent launchIntent = pm.getLaunchIntentForPackage(GOOGLE_FIT_APP_URI);
             mReactContext.startActivity(launchIntent);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.i(REACT_MODULE, e.toString());
         }
     }
@@ -355,7 +355,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
         try {
             pm.getPackageInfo(GOOGLE_FIT_APP_URI, PackageManager.GET_ACTIVITIES);
             return true;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.i(REACT_MODULE, e.toString());
             return false;
         }
@@ -378,7 +378,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(HealthDataTypes.TYPE_BLOOD_PRESSURE);
             promise.resolve(healthHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -393,7 +393,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(HealthDataTypes.TYPE_BODY_TEMPERATURE);
             promise.resolve(healthHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -408,7 +408,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(HealthDataTypes.TYPE_OXYGEN_SATURATION);
             promise.resolve(healthHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -423,7 +423,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(HealthDataTypes.TYPE_BLOOD_GLUCOSE);
             promise.resolve(healthHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -434,7 +434,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(HealthDataTypes.TYPE_BLOOD_GLUCOSE);
             healthHistory.saveBloodGlucose(bloodGlucoseSample);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -445,7 +445,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(HealthDataTypes.TYPE_BLOOD_PRESSURE);
             healthHistory.saveBloodPressure(bloodPressureSample);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -461,7 +461,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(DataType.TYPE_HEART_RATE_BPM);
             promise.resolve(healthHistory.getHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -477,7 +477,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
             HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
             healthHistory.setDataType(DataType.TYPE_HEART_RATE_BPM);
             promise.resolve(healthHistory.getRestingHeartRateHistory((long)startDate, (long)endDate, bucketInterval, bucketUnit));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -488,7 +488,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
                                     Promise promise) {
         try {
             promise.resolve(mGoogleFitManager.getHydrationHistory().getHistory((long) startDate, (long) endDate));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -500,7 +500,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
         try {
             HydrationHistory hydrationHistory = mGoogleFitManager.getHydrationHistory();
             successCallback.invoke(hydrationHistory.save(hydrationArray));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -509,7 +509,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
         try {
             HydrationHistory hydrationHistory = mGoogleFitManager.getHydrationHistory();
             successCallback.invoke(hydrationHistory.delete(options));
-        } catch (IllegalViewOperationException e) {
+        } catch (Throwable e) {
             errorCallback.invoke(e.getMessage());
         }
     }
@@ -519,7 +519,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void getSleepSamples(double startDate, double endDate, Promise promise) {
         try {
            mGoogleFitManager.getSleepHistory().getSleepData((long)startDate, (long)endDate, promise);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -528,7 +528,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void saveSleep(ReadableMap sleepSample, Promise promise) {
         try {
             mGoogleFitManager.getSleepHistory().saveSleep(sleepSample, promise);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -537,7 +537,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void getWorkoutSession(double startDate, double endDate, ReadableMap options, Promise promise) {
         try{
             mGoogleFitManager.getActivityHistory().getWorkoutSession((long)startDate, (long)endDate, options, promise);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -546,7 +546,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void saveWorkout(double startDate, double endDate, ReadableMap options, Promise promise) {
         try {
             mGoogleFitManager.getActivityHistory().saveWorkout((long)startDate, (long)endDate, options, promise);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -555,7 +555,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void deleteAllWorkout(double startDate, double endDate, ReadableMap options, Promise promise) {
         try {
             mGoogleFitManager.getActivityHistory().deleteAllWorkout((long)startDate, (long)endDate, options, promise);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
@@ -564,7 +564,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     public void deleteAllSleep(double startDate, double endDate, ReadableMap options, Promise promise) {
         try {
             mGoogleFitManager.getActivityHistory().deleteAllSleep((long)startDate, (long)endDate, options, promise);
-        } catch (Error e) {
+        } catch (Throwable e) {
             promise.reject(e);
         }
     }
