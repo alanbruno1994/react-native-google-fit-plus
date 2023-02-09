@@ -65,6 +65,7 @@ public class ActivityHistory {
     private static final String CALORIES_FIELD_NAME = "calories";
     private static final String DURATION_FIELD_NAME = "duration";
     private static final String INTENSITY_FIELD_NAME = "intensity";
+    private static final String HEARTBEAT_FIELD_NAME = "heartbeat";
 
     private static final DataType[] WORKOUT_FIELD_DATATYPE = new DataType[]{
             DataType.TYPE_ACTIVITY_SEGMENT,
@@ -331,6 +332,24 @@ public class ActivityHistory {
 
             sessionInsertBuilder.addDataSet(calDataSet);
             fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);
+        }
+
+        if (options.hasKey(HEARTBEAT_FIELD_NAME)) {
+            /*
+            Float calories = (float) options.getDouble(CALORIES_FIELD_NAME);
+            DataSource calDataSource = createWorkoutDataSource(DataType.TYPE_CALORIES_EXPENDED);
+
+            DataPoint calDataPoint = DataPoint.builder(calDataSource)
+                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                    .setField(Field.FIELD_CALORIES, calories)
+                    .build();
+
+            DataSet calDataSet = DataSet.builder(calDataSource)
+                    .add(calDataPoint)
+                    .build();
+
+            sessionInsertBuilder.addDataSet(calDataSet);
+            fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);*/
         }
 
         //create intensity
