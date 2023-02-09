@@ -340,8 +340,8 @@ public class ActivityHistory {
 
             ReadableArray heartRateArray=notificationData.getArray(HEARTBEAT_FIELD_NAME);
             for(int i=0;i<heartRateArray.size();i++){
-                float value=(float)v.getMap(i).getDouble("value");
-                long time=(long)v.getMap(i).getDouble("timestamp");
+                float value=(float)heartRateArray.getMap(i).getDouble("value");
+                long time=(long)heartRateArray.getMap(i).getDouble("timestamp");
                 DataPoint dataPoint = dataSet.createDataPoint()
                         .setTimestamp(time, TimeUnit.MILLISECONDS)
                         .setFloatValues(value);
