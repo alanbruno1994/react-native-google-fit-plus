@@ -335,6 +335,7 @@ public class ActivityHistory {
         }
 
         if (options.hasKey(HEARTBEAT_FIELD_NAME)) {
+            DataSource heartRateDataSource = createWorkoutDataSource(DataType.TYPE_HEART_RATE_BPM);
             /*
             Float calories = (float) options.getDouble(CALORIES_FIELD_NAME);
             DataSource calDataSource = createWorkoutDataSource(DataType.TYPE_CALORIES_EXPENDED);
