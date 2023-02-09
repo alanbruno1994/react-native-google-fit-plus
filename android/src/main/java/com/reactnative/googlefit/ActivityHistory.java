@@ -336,7 +336,7 @@ public class ActivityHistory {
 
         if (options.hasKey(HEARTBEAT_FIELD_NAME)) {
             DataSource heartRateDataSource = createWorkoutDataSource(DataType.TYPE_HEART_RATE_BPM);
-            DataSet dataSet = DataSet.create(DataType.TYPE_HEART_RATE_BPM);
+            DataSet dataSet = DataSet.create(heartRateDataSource);
 
             ReadableArray heartRateArray=notificationData.getArray(HEARTBEAT_FIELD_NAME);
             for(int i=0;i<heartRateArray.size();i++){
@@ -345,8 +345,9 @@ public class ActivityHistory {
                 DataPoint dataPoint = dataSet.createDataPoint()
                         .setTimestamp(time, TimeUnit.MILLISECONDS)
                         .setFloatValues(value);
+                dataSet.add(dataPoint);
             }
-            dataSet.add(dataPoint);
+
             fitnessOptionsBuilder.addDataType(DataType.TYPE_HEART_RATE_BPM, FitnessOptions.ACCESS_WRITE);
         }
 
