@@ -338,7 +338,7 @@ public class ActivityHistory {
             DataSource heartRateDataSource = createWorkoutDataSource(DataType.TYPE_HEART_RATE_BPM);
             DataSet dataSet = DataSet.create(heartRateDataSource);
 
-            ReadableArray heartRateArray=notificationData.getArray(HEARTBEAT_FIELD_NAME);
+            ReadableArray heartRateArray=options.getArray(HEARTBEAT_FIELD_NAME);
             for(int i=0;i<heartRateArray.size();i++){
                 float value=(float)heartRateArray.getMap(i).getDouble("value");
                 long time=(long)heartRateArray.getMap(i).getDouble("timestamp");
