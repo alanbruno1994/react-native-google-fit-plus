@@ -336,21 +336,18 @@ public class ActivityHistory {
 
         if (options.hasKey(HEARTBEAT_FIELD_NAME)) {
             DataSource heartRateDataSource = createWorkoutDataSource(DataType.TYPE_HEART_RATE_BPM);
-            /*
-            Float calories = (float) options.getDouble(CALORIES_FIELD_NAME);
-            DataSource calDataSource = createWorkoutDataSource(DataType.TYPE_CALORIES_EXPENDED);
+            DataSet dataSet = DataSet.create(DataType.TYPE_HEART_RATE_BPM);
 
-            DataPoint calDataPoint = DataPoint.builder(calDataSource)
-                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                    .setField(Field.FIELD_CALORIES, calories)
-                    .build();
-
-            DataSet calDataSet = DataSet.builder(calDataSource)
-                    .add(calDataPoint)
-                    .build();
-
-            sessionInsertBuilder.addDataSet(calDataSet);
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);*/
+            ReadableArray heartRateArray=notificationData.getArray(HEARTBEAT_FIELD_NAME);
+            for(int i=0;i<heartRateArray.size();i++){
+                float value=(float)v.getMap(i).getDouble("value");
+                long time=(long)v.getMap(i).getDouble("timestamp");
+                DataPoint dataPoint = dataSet.createDataPoint()
+                        .setTimestamp(time, TimeUnit.MILLISECONDS)
+                        .setFloatValues(value);
+            }
+            dataSet.add(dataPoint);
+            fitnessOptionsBuilder.addDataType(DataType.TYPE_HEART_RATE_BPM, FitnessOptions.ACCESS_WRITE);
         }
 
         //create intensity
