@@ -61,6 +61,7 @@ public class GoogleFitManager implements ActivityEventListener {
     private ActivityHistory activityHistory;
     private HydrationHistory hydrationHistory;
     private SleepHistory sleepHistory;
+    private HeartHistory heartHistory;
 
     private static final String TAG = "RNGoogleFit";
 //    reserve to replace deprecated Api in the future
@@ -85,6 +86,7 @@ public class GoogleFitManager implements ActivityEventListener {
         this.activityHistory = new ActivityHistory(mReactContext, this);
         this.hydrationHistory = new HydrationHistory(mReactContext, this);
         this.sleepHistory = new SleepHistory(mReactContext, this);
+        this.heartHistory = new HeartHistory(mReactContext, this);
         //        this.stepSensor = new StepSensor(mReactContext, activity);
     }
 
@@ -110,6 +112,10 @@ public class GoogleFitManager implements ActivityEventListener {
 
     public HealthHistory getHealthHistory() {
         return healthHistory;
+    }
+
+    public HeartHistory getHeartHistory() {
+        return heartHistory;
     }
 
     public DistanceHistory getDistanceHistory() {
