@@ -207,6 +207,12 @@ declare module 'react-native-google-fit' {
 
     saveWorkout: (options: WorkoutSample) => Promise<Boolean | undefined>
 
+    saveHeart: (
+      startTime: number,
+      endTime: number,
+      value: number
+    ) => Promise<Boolean>
+
     deleteAllWorkout: (options: DeleteOptions) => Promise<Boolean | undefined>
 
     deleteAllSleep: (options: DeleteOptions) => Promise<Boolean | undefined>
