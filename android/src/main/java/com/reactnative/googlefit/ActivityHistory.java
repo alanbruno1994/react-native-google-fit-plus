@@ -40,8 +40,8 @@ import com.google.android.gms.fitness.result.DataReadResponse;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 import java.util.concurrent.TimeUnit;
 
 import static com.google.android.gms.fitness.data.Device.TYPE_WATCH;
@@ -65,7 +65,7 @@ public class ActivityHistory {
     private static final String CALORIES_FIELD_NAME = "calories";
     private static final String DURATION_FIELD_NAME = "duration";
     private static final String INTENSITY_FIELD_NAME = "intensity";
-    private static final String HEARTBEAT_FIELD_NAME = "heartbeat";
+
 
     private static final DataType[] WORKOUT_FIELD_DATATYPE = new DataType[]{
             DataType.TYPE_ACTIVITY_SEGMENT,
@@ -334,22 +334,7 @@ public class ActivityHistory {
             fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);
         }
 
-        if (options.hasKey(HEARTBEAT_FIELD_NAME)) {
-            DataSource heartRateDataSource = createWorkoutDataSource(DataType.TYPE_HEART_RATE_BPM);
-            DataSet dataSet = DataSet.create(heartRateDataSource);
 
-            ReadableArray heartRateArray=options.getArray(HEARTBEAT_FIELD_NAME);
-            for(int i=0;i<heartRateArray.size();i++){
-                float value=(float)heartRateArray.getMap(i).getDouble("value");
-                long time=(long)heartRateArray.getMap(i).getDouble("timestamp");
-                DataPoint dataPoint = dataSet.createDataPoint()
-                        .setTimestamp(time, TimeUnit.MILLISECONDS)
-                        .setFloatValues(value);
-                dataSet.add(dataPoint);
-            }
-
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_HEART_RATE_BPM, FitnessOptions.ACCESS_WRITE);
-        }
 
         //create intensity
         if (options.hasKey(INTENSITY_FIELD_NAME)) {
