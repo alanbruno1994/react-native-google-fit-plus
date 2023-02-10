@@ -49,7 +49,7 @@ public class HeartHistory {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        promise.resolve(reject);
+                        promise.resolve(false);
                     }
                 });
     }

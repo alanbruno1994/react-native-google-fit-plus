@@ -555,7 +555,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
         try {
             mGoogleFitManager.getHeartHistory().saveHeart(startTime,endTime, value, promise);
         } catch (Throwable e) {
-            promise.reject(false);
+            promise.resolve(false);
         }
     }
     @ReactMethod
