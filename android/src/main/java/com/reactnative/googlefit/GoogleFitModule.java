@@ -551,9 +551,9 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
         }
     }
     @ReactMethod
-    public void saveHeart(long startTime,long endTime, float value, Promise promise) {
+    public void saveHeart(double startTime,double endTime, double value, Promise promise) {
         try {
-            mGoogleFitManager.getHeartHistory().saveHeart(startTime,endTime, value, promise);
+            mGoogleFitManager.getHeartHistory().saveHeart((long)startTime,(long)endTime,(float) value, promise);
         } catch (Throwable e) {
             promise.resolve(false);
         }
