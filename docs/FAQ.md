@@ -15,7 +15,7 @@ After searching the entire internet i found a comment mentioning that the client
 
 Then... at least for me, things are finally working.
 
-Conversation: https://github.com/StasDoskalenko/react-native-google-fit/issues/90
+Conversation: https://github.com/StasDoskalenko/react-native-google-fit-plus/issues/90
 
 ### Some scopes are not available
 

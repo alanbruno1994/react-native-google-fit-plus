@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bugs": {
-    "url": "https://github.com/StasDoskalenko/react-native-google-fit/issues"
+    "url": "https://github.com/alanbruno1994/react-native-google-fit-plus/issues"
   },
-  "homepage": "https://github.com/StasDoskalenko/react-native-google-fit#readme",
+  "homepage": "https://github.com/alanbruno1994/react-native-google-fit-plus#readme",
   "keywords": [
     "react-native",
     "google-fit",
@@ -26,7 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StasDoskalenko/react-native-google-fit.git"
+    "url": "git+https://github.com/alanbruno1994/react-native-google-fit-plus.git"
   },
   "dependencies": {
     "moment": "^2.29.2"

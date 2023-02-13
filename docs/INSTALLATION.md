@@ -1,6 +1,6 @@
 ### Getting started
 
-`$ npm install react-native-google-fit --save`
+`$ npm install react-native-google-fit-plus --save`
 
 ### Note: If your React Native version > 0.60, You can skip the below section and scroll down to Demo Walkthrough Section to check how we config the authentication API with an existing project.
 ### Enable Google Fitness API for your application
@@ -31,7 +31,7 @@ https://developers.google.com/fit/android/get-api-key
 
 ### Mostly Automatic installation
 
-`$ react-native link react-native-google-fit`
+`$ react-native link react-native-google-fit-plus`
 
 then pass your package name to the module in MainApplication.java (google fit requires package name to save data)
 
@@ -48,8 +48,8 @@ _**Note**: Do not change BuildConfig.APPLICATION_ID - it's a constant value._
 
 2. Append the following lines to `android/settings.gradle`:
    ```
-   include ':react-native-google-fit'
-   project(':react-native-google-fit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-fit-plus/android')
+   include ':react-native-google-fit-plus'
+   project(':react-native-google-fit-plus').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-fit-plus/android')
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 
@@ -66,7 +66,7 @@ _**Note**: Do not change BuildConfig.APPLICATION_ID - it's a constant value._
 ## Demo Walkthrough (Development Setup)
  
 1. `npx react-native init AuthExampleTS --template react-native-template-typescript` to create a fresh RN project then go into the project folder
-2. `npm install react-native-google-fit --save` install the library
+2. `npm install react-native-google-fit-plus --save` install the library
 3. `cd .\android\app` in the root 
    there is a `debug.keystore` file
    
