@@ -49,12 +49,12 @@ _**Note**: Do not change BuildConfig.APPLICATION_ID - it's a constant value._
 2. Append the following lines to `android/settings.gradle`:
    ```
    include ':react-native-google-fit'
-   project(':react-native-google-fit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-fit/android')
+   project(':react-native-google-fit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-fit-plus/android')
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 
    ```
-     compile project(':react-native-google-fit')
+     compile project(':react-native-google-fit-plus')
    ```
 
 

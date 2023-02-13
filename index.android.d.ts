@@ -1,5 +1,5 @@
 // tslint:disable:no-default-export interface-name
-declare module 'react-native-google-fit' {
+declare module 'react-native-google-fit-plus' {
   export interface GoogleFit {
     eventListeners: any[]
     isAuthorized: boolean
