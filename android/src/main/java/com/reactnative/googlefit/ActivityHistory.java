@@ -62,7 +62,9 @@ public class ActivityHistory {
 
     private static final String STEPS_FIELD_NAME = "steps";
     private static final String DISTANCE_FIELD_NAME = "distance";
+    private static final String DISTANCE_METERS_FIELD_NAME = "distanceMeters";
     private static final String CALORIES_FIELD_NAME = "calories";
+    private static final String MOVE_MINUTES_FIELD_NAME = "moveMinutes";
     private static final String DURATION_FIELD_NAME = "duration";
     private static final String INTENSITY_FIELD_NAME = "intensity";
 
@@ -316,6 +318,8 @@ public class ActivityHistory {
         sessionInsertBuilder.addDataSet(activityDataSet);
         fitnessOptionsBuilder.addDataType(DataType.TYPE_ACTIVITY_SEGMENT, FitnessOptions.ACCESS_WRITE);
 
+
+
         //create calories
         if (options.hasKey(CALORIES_FIELD_NAME)) {
             Float calories = (float) options.getDouble(CALORIES_FIELD_NAME);
@@ -332,6 +336,31 @@ public class ActivityHistory {
 
             sessionInsertBuilder.addDataSet(calDataSet);
             fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);
+        }
+
+        //create move minutes
+        if (options.hasKey(MOVE_MINUTES_FIELD_NAME)) {
+            Integer moveMinutes = options.getInt(MOVE_MINUTES_FIELD_NAME);
+            DataSource dataSource = createWorkoutDataSource(DataType.TYPE_MOVE_MINUTES);
+            DataSet dataSet = DataSet.create(dataSource);
+            DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+            dataPoint.getValue(Field.FIELD_DURATION).setInt(moveMinutes);
+            dataSet.add(dataPoint);
+
+            sessionInsertBuilder.addDataSet(dataSet);
+            fitnessOptionsBuilder.addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_WRITE);
+        }
+
+        //create distance
+        if (options.hasKey(MOVE_MINUTES_FIELD_NAME)) {
+            Float distance = (float)options.getDouble(DISTANCE_METERS_FIELD_NAME);
+            DataSource dataSource = createWorkoutDataSource(DataType.TYPE_DISTANCE_DELTA);
+            DataSet dataSet = DataSet.create(dataSource);
+            DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+            dataPoint.getValue(Field.FIELD_DISTANCE).setFloat(distance);
+            dataSet.add(dataPoint);
+            sessionInsertBuilder.addDataSet(dataSet);
+            fitnessOptionsBuilder.addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE);
         }
 
 

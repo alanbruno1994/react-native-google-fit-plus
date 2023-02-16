@@ -473,6 +473,8 @@ declare module 'react-native-google-fit-plus' {
     description?: string
     calories?: number
     steps?: number
+    moveMinutes?: number
+    distanceMeters?: number
     intensity?: number
     heartbeat?: HearthValue[]
   }
