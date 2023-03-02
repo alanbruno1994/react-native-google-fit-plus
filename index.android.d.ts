@@ -213,6 +213,12 @@ declare module 'react-native-google-fit-plus' {
       value: number
     ) => Promise<Boolean>
 
+    saveSteps: (
+      startTime: number,
+      endTime: number,
+      step: number
+    ) => Promise<Boolean>
+
     deleteAllWorkout: (options: DeleteOptions) => Promise<Boolean | undefined>
 
     deleteAllSleep: (options: DeleteOptions) => Promise<Boolean | undefined>

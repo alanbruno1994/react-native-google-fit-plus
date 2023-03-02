@@ -361,6 +361,14 @@ class RNGoogleFit {
     }
   }
 
+  saveSteps = async (startTime, endTime, step) => {
+    try {
+      return await googleFit.saveSteps(startTime, endTime, step)
+    } catch (err) {
+      return err
+    }
+  }
+
   deleteAllWorkout = async (options) => {
     try {
       const { startDate, endDate, ...config } = options
