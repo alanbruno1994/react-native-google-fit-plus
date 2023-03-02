@@ -29,7 +29,7 @@ public class StepHistory {
 
         public void saveStep(long startTime,long endTime, int step, Promise promise) {
            DataSource dataSource = new DataSource.Builder()
-                   .setAppPackageName(context)
+                   .setAppPackageName(mReactContext)
                    .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
                    .build();
            DataPoint stepCountDelta = DataPoint.builder(dataSource)
@@ -43,7 +43,7 @@ public class StepHistory {
                    .build();
 
            // Inserir o conjunto de dados na conta do usuário
-           Fitness.getHistoryClient(context, GoogleSignIn.getLastSignedInAccount(context))
+           Fitness.getHistoryClient(mReactContext, GoogleSignIn.getLastSignedInAccount(mReactContext))
                    .insertData(stepCountDeltaDataSet)
                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                        @Override
