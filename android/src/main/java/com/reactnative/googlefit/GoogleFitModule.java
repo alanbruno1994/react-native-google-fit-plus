@@ -562,7 +562,7 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     @ReactMethod
     public void saveSteps(double startTime,double endTime, int step, Promise promise) {
         try {
-            mGoogleFitManager.getStepsHistory().saveStep((long)startTime,(long)endTime, step, promise);
+            mGoogleFitManager.getStepsHistorySave().saveStep((long)startTime,(long)endTime, step, promise);
         } catch (Throwable e) {
             promise.resolve(false);
         }
