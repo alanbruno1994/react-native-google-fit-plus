@@ -53,7 +53,7 @@ public class StepHistory {
                    })
                    .addOnFailureListener(new OnFailureListener() {
                        @Override
-                       public void onFailure(@NonNull Exception e) {
+                       public void onFailure(Exception e) {
                            Log.e(TAG, "Erro ao inserir dados de passos.", e);
                        }
                    });
