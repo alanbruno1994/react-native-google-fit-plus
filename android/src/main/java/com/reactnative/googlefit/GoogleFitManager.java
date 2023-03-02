@@ -104,10 +104,6 @@ public class GoogleFitManager implements ActivityEventListener {
         return mStepCounter;
     }
 
-    public StepHistory getStepHistory() {
-        return mStepCounter;
-    }
-
     public StepHistory getStepsHistory() {
         return stepHistory;
     }
