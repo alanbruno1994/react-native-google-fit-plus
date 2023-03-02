@@ -22,7 +22,7 @@ public class StepHistorySave {
         private static final String TAG = "RNGoogleFit";
  
 
-        public StepHistory(ReactContext reactContext, GoogleFitManager googleFitManager){
+        public StepHistorySave(ReactContext reactContext, GoogleFitManager googleFitManager){
             this.mReactContext = reactContext;
             this.googleFitManager = googleFitManager;
         }
