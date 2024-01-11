@@ -127,7 +127,7 @@ final class HelperUtil {
 
     public static void displayMessage(String mensagem){
         try {
-            if(GoogleFitModule.context) {
+            if(GoogleFitModule.context!=null) {
                 Toast toast = Toast.makeText(GoogleFitModule.context, "Failure - " + mensagem, Toast.LENGTH_SHORT);
                 toast.show();
             }
