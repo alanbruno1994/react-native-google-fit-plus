@@ -139,7 +139,7 @@ public class GoogleFitManager implements ActivityEventListener {
             }
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
         }
     }
 
@@ -235,7 +235,7 @@ public class GoogleFitManager implements ActivityEventListener {
 
             mApiClient.connect();
         } catch (Throwable e) {
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
             HelperUtil.displayMessage(this.getClass().getName());
         }
     }
@@ -256,7 +256,7 @@ public class GoogleFitManager implements ActivityEventListener {
 
             googleSignInClient.signOut();
         } catch (Throwable e) {
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
             HelperUtil.displayMessage(this.getClass().getName());
         }
     }
@@ -281,7 +281,7 @@ public class GoogleFitManager implements ActivityEventListener {
                         }
                     });
         } catch (Throwable e) {
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
             HelperUtil.displayMessage(this.getClass().getName());
         }
     }
@@ -295,7 +295,7 @@ public class GoogleFitManager implements ActivityEventListener {
                     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                     .emit(eventName, params);
         } catch (Throwable e) {
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
 
             HelperUtil.displayMessage(this.getClass().getName());
         }

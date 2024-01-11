@@ -98,7 +98,7 @@ public class StepHistory {
             successCallback.invoke(userInputSteps);
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
         }
     }
 
@@ -265,7 +265,7 @@ public class StepHistory {
             }
         }catch (Throwable e){
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
         }
     }
 

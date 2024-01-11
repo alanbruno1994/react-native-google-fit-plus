@@ -109,7 +109,7 @@ public class StepSensor implements SensorEventListener {
             }
         }catch (Throwable e){
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
         }
     }
 
@@ -127,7 +127,7 @@ public class StepSensor implements SensorEventListener {
                     .emit(eventName, params);
         }catch (Throwable e){
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
         }
     }
 

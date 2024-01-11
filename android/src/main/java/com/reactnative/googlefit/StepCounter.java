@@ -72,7 +72,7 @@ public class StepCounter implements OnDataPointListener {
                         }
                     } catch (Throwable e) {
                         HelperUtil.displayMessage(this.getClass().getName());
-                        Log.error(this.getClass().getName(), e.getMessage());
+                        Log.e(this.getClass().getName(), e.getMessage());
                     }
                 }
             };
@@ -81,7 +81,7 @@ public class StepCounter implements OnDataPointListener {
                     .setResultCallback(dataSourcesResultCallback);
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class StepCounter implements OnDataPointListener {
                     });
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
         }
     }
 
@@ -139,7 +139,7 @@ public class StepCounter implements OnDataPointListener {
             }
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
         }
     }
 
@@ -155,7 +155,7 @@ public class StepCounter implements OnDataPointListener {
                     .emit(eventName, params);
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(), e.getMessage());
+            Log.e(this.getClass().getName(), e.getMessage());
         }
     }
 }

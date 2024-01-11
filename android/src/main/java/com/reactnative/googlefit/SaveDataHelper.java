@@ -27,7 +27,7 @@ class SaveDataHelper extends AsyncTask<Void, Void, Void> {
                 .await(1, TimeUnit.MINUTES);
       }
     }catch (Throwable e){
-      Log.error(this.getClass().getName(),e.getMessage());
+      Log.e(this.getClass().getName(),e.getMessage());
       HelperUtil.displayMessage(this.getClass().getName());
     }
     return null;

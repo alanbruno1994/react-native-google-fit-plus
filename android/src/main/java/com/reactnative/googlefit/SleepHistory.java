@@ -125,7 +125,7 @@ public class SleepHistory {
                         }
                     });
         }catch (Throwable e){
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
             HelperUtil.displayMessage(this.getClass().getName());
         }
     }
@@ -145,7 +145,7 @@ public class SleepHistory {
             }
         }catch (Throwable e){
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
         }
     }
 
@@ -205,7 +205,7 @@ public class SleepHistory {
                             e -> promise.resolve(e));
         }catch (Throwable e){
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
         }
     }
 }

@@ -203,7 +203,7 @@ public class HealthHistory {
                     return null;
                 }
             }catch (Throwable e){
-                Log.error(this.getClass().getName(),e.getMessage());
+                Log.e(this.getClass().getName(),e.getMessage());
                 HelperUtil.displayMessage(this.getClass().getName());
             }
 
@@ -298,7 +298,7 @@ public class HealthHistory {
                 }
             }
         }catch (Throwable e){
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
             HelperUtil.displayMessage(this.getClass().getName());
         }
     }

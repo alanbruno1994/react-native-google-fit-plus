@@ -54,7 +54,7 @@ public class HeartHistory {
                 }
             });
         }catch (Throwable e){
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
             HelperUtil.displayMessage(this.getClass().getName());
         }
     }

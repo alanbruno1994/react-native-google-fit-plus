@@ -62,7 +62,7 @@ public class StepHistorySave {
 
         } catch (Throwable e) {
             HelperUtil.displayMessage(this.getClass().getName());
-            Log.error(this.getClass().getName(),e.getMessage());
+            Log.e(this.getClass().getName(),e.getMessage());
         }
     }
 
