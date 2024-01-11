@@ -202,7 +202,7 @@ public class HealthHistory {
                     //Log.i(TAG, "There was a problem inserting the dataset.");
                     return null;
                 }
-            }catch (Throwable){
+            }catch (Throwable e){
                 Log.error(this.getClass().getName(),e.getMessage());
                 HelperUtil.displayMessage(this.getClass().getName());
             }
