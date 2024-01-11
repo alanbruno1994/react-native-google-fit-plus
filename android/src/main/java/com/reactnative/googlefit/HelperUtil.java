@@ -125,10 +125,12 @@ final class HelperUtil {
         }
     }
 
-    public static void displayMessage(ReactContext mReactContext, String mensagem){
+    public static void displayMessage(String mensagem){
         try {
-            Toast toast = Toast.makeText(context, "Failure - "+mensagem, Toast.LENGTH_SHORT);
-            toast.show();
+            if(GoogleFitModule.context) {
+                Toast toast = Toast.makeText(GoogleFitModule.context, "Failure - " + mensagem, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }catch (Throwable e){
 
         }

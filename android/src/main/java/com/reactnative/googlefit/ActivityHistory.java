@@ -176,6 +176,7 @@ public class ActivityHistory {
 
         } catch (Exception e) {
             Log.w(TAG, "Exception: " + e);
+            HelperUtil.displayMessage(this.getClass().getName());
         }
 
         return results;
@@ -211,248 +212,265 @@ public class ActivityHistory {
             } else {
                 Log.w(TAG, "There was an error reading data from Google Fit" + response.getStatus().toString());
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.w(TAG, "Exception: " + e);
+            HelperUtil.displayMessage(this.getClass().getName());
         }
         return moveMinutes;
     }
 
     public void getWorkoutSession(long startTime, long endTime, ReadableMap options, final Promise promise) {
-        WritableArray results = Arguments.createArray();
-        String readSessionFromAllAppsKey = "readSessionFromAllApps";
-        boolean readSessionFromAllApps = options.hasKey(readSessionFromAllAppsKey)
-                ? options.getBoolean(readSessionFromAllAppsKey)
-                : false;
+        try {
+            WritableArray results = Arguments.createArray();
+            String readSessionFromAllAppsKey = "readSessionFromAllApps";
+            boolean readSessionFromAllApps = options.hasKey(readSessionFromAllAppsKey)
+                    ? options.getBoolean(readSessionFromAllAppsKey)
+                    : false;
 
-        SessionReadRequest.Builder readRequestBuilder = new SessionReadRequest.Builder()
-                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                .includeActivitySessions();
+            SessionReadRequest.Builder readRequestBuilder = new SessionReadRequest.Builder()
+                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                    .includeActivitySessions();
 
-        if(readSessionFromAllApps) readRequestBuilder.readSessionsFromAllApps();
+            if (readSessionFromAllApps) readRequestBuilder.readSessionsFromAllApps();
 
-        for (DataType dataType : WORKOUT_FIELD_DATATYPE) {
-            readRequestBuilder.read(dataType);
-        }
-        readRequestBuilder.read(DataType.TYPE_DISTANCE_DELTA);
+            for (DataType dataType : WORKOUT_FIELD_DATATYPE) {
+                readRequestBuilder.read(dataType);
+            }
+            readRequestBuilder.read(DataType.TYPE_DISTANCE_DELTA);
 
-        SessionReadRequest readRequest = readRequestBuilder.build();
-        FitnessOptions fitnessOptions = createWorkoutFitnessOptions(FitnessOptions.ACCESS_READ);
+            SessionReadRequest readRequest = readRequestBuilder.build();
+            FitnessOptions fitnessOptions = createWorkoutFitnessOptions(FitnessOptions.ACCESS_READ);
 
-        Fitness.getSessionsClient(this.mReactContext, GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions))
-                .readSession(readRequest)
-                .addOnSuccessListener(response -> {
-                    List<Session> sessions = response.getSessions();
-                    for (Session session : sessions) {
-                        WritableMap map = Arguments.createMap();
-                        List<DataSet> dataSets = response.getDataSet(session);
-                        for (DataSet dataSet : dataSets) {
-                            for (DataPoint dataPoint : dataSet.getDataPoints()) {
-                                for (Field field : dataPoint.getDataType().getFields()) {
-                                    String fieldName = field.getName();
-                                    switch (fieldName) {
-                                        case STEPS_FIELD_NAME:
-                                        case DURATION_FIELD_NAME:
-                                            map.putInt(fieldName, dataPoint.getValue(field).asInt());
-                                            break;
-                                        case DISTANCE_FIELD_NAME:
-                                        case CALORIES_FIELD_NAME:
-                                        case INTENSITY_FIELD_NAME:
-                                            map.putDouble(fieldName, dataPoint.getValue(field).asFloat());
-                                            break;
-                                        default:
-                                            map.putString(fieldName, dataPoint.getValue(field).toString());
-                                            break;
+            Fitness.getSessionsClient(this.mReactContext, GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions))
+                    .readSession(readRequest)
+                    .addOnSuccessListener(response -> {
+                        List<Session> sessions = response.getSessions();
+                        for (Session session : sessions) {
+                            WritableMap map = Arguments.createMap();
+                            List<DataSet> dataSets = response.getDataSet(session);
+                            for (DataSet dataSet : dataSets) {
+                                for (DataPoint dataPoint : dataSet.getDataPoints()) {
+                                    for (Field field : dataPoint.getDataType().getFields()) {
+                                        String fieldName = field.getName();
+                                        switch (fieldName) {
+                                            case STEPS_FIELD_NAME:
+                                            case DURATION_FIELD_NAME:
+                                                map.putInt(fieldName, dataPoint.getValue(field).asInt());
+                                                break;
+                                            case DISTANCE_FIELD_NAME:
+                                            case CALORIES_FIELD_NAME:
+                                            case INTENSITY_FIELD_NAME:
+                                                map.putDouble(fieldName, dataPoint.getValue(field).asFloat());
+                                                break;
+                                            default:
+                                                map.putString(fieldName, dataPoint.getValue(field).toString());
+                                                break;
+                                        }
                                     }
                                 }
                             }
+                            map.putString("appPackageName", session.getAppPackageName());
+                            map.putString("activity", session.getActivity());
+                            map.putDouble("startDate", session.getStartTime(TimeUnit.MILLISECONDS));
+                            map.putDouble("endDate", session.getEndTime(TimeUnit.MILLISECONDS));
+                            map.putString("sessionName", session.getName());
+                            map.putString("description", session.getDescription());
+                            map.putString("identifier", session.getIdentifier());
+                            results.pushMap(map);
                         }
-                        map.putString("appPackageName", session.getAppPackageName());
-                        map.putString("activity", session.getActivity());
-                        map.putDouble("startDate", session.getStartTime(TimeUnit.MILLISECONDS));
-                        map.putDouble("endDate", session.getEndTime(TimeUnit.MILLISECONDS));
-                        map.putString("sessionName", session.getName());
-                        map.putString("description", session.getDescription());
-                        map.putString("identifier", session.getIdentifier());
-                        results.pushMap(map);
-                    }
-                    promise.resolve(results);
-                })
-                .addOnFailureListener(promise::reject);
+                        promise.resolve(results);
+                    })
+                    .addOnFailureListener(promise::reject);
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
+        }
     }
 
     public void saveWorkout(long startTime, long endTime, ReadableMap options, final Promise promise) {
-        String sessionName = options.getString("sessionName");
-        String identifier = options.getString("identifier");
-        String description = options.hasKey("description") ? options.getString("description") : "";
-        String activityType = options.getString("activityType");
+        try {
+            String sessionName = options.getString("sessionName");
+            String identifier = options.getString("identifier");
+            String description = options.hasKey("description") ? options.getString("description") : "";
+            String activityType = options.getString("activityType");
 
-        //create session
-        Session session = new Session.Builder()
-                .setName(sessionName)
-                .setActivity(activityType)
-                .setIdentifier(identifier)
-                .setDescription(description)
-                .setStartTime(startTime, TimeUnit.MILLISECONDS)
-                .setEndTime(endTime, TimeUnit.MILLISECONDS)
-                .build();
+            //create session
+            Session session = new Session.Builder()
+                    .setName(sessionName)
+                    .setActivity(activityType)
+                    .setIdentifier(identifier)
+                    .setDescription(description)
+                    .setStartTime(startTime, TimeUnit.MILLISECONDS)
+                    .setEndTime(endTime, TimeUnit.MILLISECONDS)
+                    .build();
 
-        //create session insert request builder
-        SessionInsertRequest.Builder sessionInsertBuilder = new SessionInsertRequest.Builder()
-                .setSession(session);
+            //create session insert request builder
+            SessionInsertRequest.Builder sessionInsertBuilder = new SessionInsertRequest.Builder()
+                    .setSession(session);
 
-        //create session client builder
-        FitnessOptions.Builder fitnessOptionsBuilder = FitnessOptions.builder();
+            //create session client builder
+            FitnessOptions.Builder fitnessOptionsBuilder = FitnessOptions.builder();
 
-        //create session activity
-        DataSource activityDataSource = createWorkoutDataSource(DataType.TYPE_ACTIVITY_SEGMENT);
+            //create session activity
+            DataSource activityDataSource = createWorkoutDataSource(DataType.TYPE_ACTIVITY_SEGMENT);
 
-        DataPoint activityDataPoint = DataPoint.builder(activityDataSource)
-                .setActivityField(Field.FIELD_ACTIVITY, activityType)
-                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                .build();
-
-        DataSet activityDataSet = DataSet.builder(activityDataSource)
-                .add(activityDataPoint)
-                .build();
-
-        sessionInsertBuilder.addDataSet(activityDataSet);
-        fitnessOptionsBuilder.addDataType(DataType.TYPE_ACTIVITY_SEGMENT, FitnessOptions.ACCESS_WRITE);
-
-
-
-        //create calories
-        if (options.hasKey(CALORIES_FIELD_NAME)) {
-            Float calories = (float) options.getDouble(CALORIES_FIELD_NAME);
-            DataSource calDataSource = createWorkoutDataSource(DataType.TYPE_CALORIES_EXPENDED);
-
-            DataPoint calDataPoint = DataPoint.builder(calDataSource)
+            DataPoint activityDataPoint = DataPoint.builder(activityDataSource)
+                    .setActivityField(Field.FIELD_ACTIVITY, activityType)
                     .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                    .setField(Field.FIELD_CALORIES, calories)
                     .build();
 
-            DataSet calDataSet = DataSet.builder(calDataSource)
-                    .add(calDataPoint)
+            DataSet activityDataSet = DataSet.builder(activityDataSource)
+                    .add(activityDataPoint)
                     .build();
 
-            sessionInsertBuilder.addDataSet(calDataSet);
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);
+            sessionInsertBuilder.addDataSet(activityDataSet);
+            fitnessOptionsBuilder.addDataType(DataType.TYPE_ACTIVITY_SEGMENT, FitnessOptions.ACCESS_WRITE);
+
+
+            //create calories
+            if (options.hasKey(CALORIES_FIELD_NAME)) {
+                Float calories = (float) options.getDouble(CALORIES_FIELD_NAME);
+                DataSource calDataSource = createWorkoutDataSource(DataType.TYPE_CALORIES_EXPENDED);
+
+                DataPoint calDataPoint = DataPoint.builder(calDataSource)
+                        .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                        .setField(Field.FIELD_CALORIES, calories)
+                        .build();
+
+                DataSet calDataSet = DataSet.builder(calDataSource)
+                        .add(calDataPoint)
+                        .build();
+
+                sessionInsertBuilder.addDataSet(calDataSet);
+                fitnessOptionsBuilder.addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE);
+            }
+
+            //create move minutes
+            if (options.hasKey(MOVE_MINUTES_FIELD_NAME)) {
+                Integer moveMinutes = options.getInt(MOVE_MINUTES_FIELD_NAME);
+                DataSource dataSource = createWorkoutDataSource(DataType.TYPE_MOVE_MINUTES);
+                DataSet dataSet = DataSet.create(dataSource);
+                DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+                dataPoint.getValue(Field.FIELD_DURATION).setInt(moveMinutes);
+                dataSet.add(dataPoint);
+
+                sessionInsertBuilder.addDataSet(dataSet);
+                fitnessOptionsBuilder.addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_WRITE);
+            }
+
+            //create distance
+            if (options.hasKey(MOVE_MINUTES_FIELD_NAME)) {
+                Float distance = (float) options.getDouble(DISTANCE_METERS_FIELD_NAME);
+                DataSource dataSource = createWorkoutDataSource(DataType.TYPE_DISTANCE_DELTA);
+                DataSet dataSet = DataSet.create(dataSource);
+                DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+                dataPoint.getValue(Field.FIELD_DISTANCE).setFloat(distance);
+                dataSet.add(dataPoint);
+                sessionInsertBuilder.addDataSet(dataSet);
+                fitnessOptionsBuilder.addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE);
+            }
+
+
+            //create intensity
+            if (options.hasKey(INTENSITY_FIELD_NAME)) {
+                Float intensity = (float) options.getDouble(INTENSITY_FIELD_NAME);
+                DataSource intensityDataSource = createWorkoutDataSource(DataType.TYPE_HEART_POINTS);
+
+                DataPoint intensityDataPoint = DataPoint.builder(intensityDataSource)
+                        .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                        .setField(Field.FIELD_INTENSITY, intensity)
+                        .build();
+
+                DataSet intensityDataSet = DataSet.builder(intensityDataSource)
+                        .add(intensityDataPoint)
+                        .build();
+
+                sessionInsertBuilder.addDataSet(intensityDataSet);
+                fitnessOptionsBuilder.addDataType(DataType.TYPE_HEART_POINTS, FitnessOptions.ACCESS_WRITE);
+            }
+
+            //create steps
+            if (options.hasKey(STEPS_FIELD_NAME)) {
+                int steps = options.getInt(STEPS_FIELD_NAME);
+                DataSource stepsDataSource = createWorkoutDataSource(DataType.TYPE_STEP_COUNT_DELTA);
+
+                DataPoint stepsDataPoint = DataPoint.builder(stepsDataSource)
+                        .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                        .setField(Field.FIELD_STEPS, steps)
+                        .build();
+
+                DataSet stepsDataSet = DataSet.builder(stepsDataSource)
+                        .add(stepsDataPoint)
+                        .build();
+
+                sessionInsertBuilder.addDataSet(stepsDataSet);
+                fitnessOptionsBuilder.addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE);
+            }
+
+            // add dataSet into session
+            SessionInsertRequest insertRequest = sessionInsertBuilder.build();
+
+            // session Client
+            FitnessOptions fitnessOptions = fitnessOptionsBuilder.build();
+            GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions);
+
+            Fitness.getSessionsClient(this.mReactContext, account)
+                    .insertSession(insertRequest)
+                    .addOnSuccessListener(unused -> promise.resolve(true))
+                    .addOnFailureListener(e -> promise.reject(e));
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
         }
-
-        //create move minutes
-        if (options.hasKey(MOVE_MINUTES_FIELD_NAME)) {
-            Integer moveMinutes = options.getInt(MOVE_MINUTES_FIELD_NAME);
-            DataSource dataSource = createWorkoutDataSource(DataType.TYPE_MOVE_MINUTES);
-            DataSet dataSet = DataSet.create(dataSource);
-            DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-            dataPoint.getValue(Field.FIELD_DURATION).setInt(moveMinutes);
-            dataSet.add(dataPoint);
-
-            sessionInsertBuilder.addDataSet(dataSet);
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_WRITE);
-        }
-
-        //create distance
-        if (options.hasKey(MOVE_MINUTES_FIELD_NAME)) {
-            Float distance = (float)options.getDouble(DISTANCE_METERS_FIELD_NAME);
-            DataSource dataSource = createWorkoutDataSource(DataType.TYPE_DISTANCE_DELTA);
-            DataSet dataSet = DataSet.create(dataSource);
-            DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-            dataPoint.getValue(Field.FIELD_DISTANCE).setFloat(distance);
-            dataSet.add(dataPoint);
-            sessionInsertBuilder.addDataSet(dataSet);
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE);
-        }
-
-
-
-        //create intensity
-        if (options.hasKey(INTENSITY_FIELD_NAME)) {
-            Float intensity = (float) options.getDouble(INTENSITY_FIELD_NAME);
-            DataSource intensityDataSource = createWorkoutDataSource(DataType.TYPE_HEART_POINTS);
-
-            DataPoint intensityDataPoint = DataPoint.builder(intensityDataSource)
-                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                    .setField(Field.FIELD_INTENSITY, intensity)
-                    .build();
-
-            DataSet intensityDataSet = DataSet.builder(intensityDataSource)
-                    .add(intensityDataPoint)
-                    .build();
-
-            sessionInsertBuilder.addDataSet(intensityDataSet);
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_HEART_POINTS, FitnessOptions.ACCESS_WRITE);
-        }
-
-        //create steps
-        if (options.hasKey(STEPS_FIELD_NAME)) {
-            int steps = options.getInt(STEPS_FIELD_NAME);
-            DataSource stepsDataSource = createWorkoutDataSource(DataType.TYPE_STEP_COUNT_DELTA);
-
-            DataPoint stepsDataPoint = DataPoint.builder(stepsDataSource)
-                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                    .setField(Field.FIELD_STEPS, steps)
-                    .build();
-
-            DataSet stepsDataSet = DataSet.builder(stepsDataSource)
-                    .add(stepsDataPoint)
-                    .build();
-
-            sessionInsertBuilder.addDataSet(stepsDataSet);
-            fitnessOptionsBuilder.addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE);
-        }
-
-        // add dataSet into session
-        SessionInsertRequest insertRequest = sessionInsertBuilder.build();
-
-        // session Client
-        FitnessOptions fitnessOptions = fitnessOptionsBuilder.build();
-        GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions);
-
-        Fitness.getSessionsClient(this.mReactContext, account)
-                .insertSession(insertRequest)
-                .addOnSuccessListener(unused -> promise.resolve(true))
-                .addOnFailureListener(e -> promise.reject(e));
     }
 
     public void deleteAllWorkout(long startTime, long endTime, ReadableMap options,  final Promise promise) {
-        DataDeleteRequest.Builder requestBuilder = new DataDeleteRequest.Builder()
-                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+        try {
+            DataDeleteRequest.Builder requestBuilder = new DataDeleteRequest.Builder()
+                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
 
 
-        // distance scope is missing here due to permission restriction
-        // will be added in the future while distance is also available from saveWorkout()
-        DataDeleteRequest request = requestBuilder
-                .addDataType(DataType.TYPE_HEART_POINTS)
-                .addDataType(DataType.TYPE_ACTIVITY_SEGMENT)
-                .addDataType(DataType.TYPE_CALORIES_EXPENDED)
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-                .addDataType(DataType.TYPE_MOVE_MINUTES)
-                .deleteAllSessions()
-                .build();
+            // distance scope is missing here due to permission restriction
+            // will be added in the future while distance is also available from saveWorkout()
+            DataDeleteRequest request = requestBuilder
+                    .addDataType(DataType.TYPE_HEART_POINTS)
+                    .addDataType(DataType.TYPE_ACTIVITY_SEGMENT)
+                    .addDataType(DataType.TYPE_CALORIES_EXPENDED)
+                    .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                    .addDataType(DataType.TYPE_MOVE_MINUTES)
+                    .deleteAllSessions()
+                    .build();
 
-        FitnessOptions fitnessOptions = createWorkoutFitnessOptions(FitnessOptions.ACCESS_WRITE);
+            FitnessOptions fitnessOptions = createWorkoutFitnessOptions(FitnessOptions.ACCESS_WRITE);
 
-        Fitness.getHistoryClient(this.mReactContext, GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions))
-                .deleteData(request)
-                .addOnSuccessListener(unused -> promise.resolve(true))
-                .addOnFailureListener(e -> promise.reject(e));
+            Fitness.getHistoryClient(this.mReactContext, GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions))
+                    .deleteData(request)
+                    .addOnSuccessListener(unused -> promise.resolve(true))
+                    .addOnFailureListener(e -> promise.reject(e));
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
+        }
     }
 
     public void deleteAllSleep(long startTime, long endTime, ReadableMap options,  final Promise promise) {
-        DataDeleteRequest.Builder requestBuilder = new DataDeleteRequest.Builder()
-                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+        try {
 
-        DataDeleteRequest request = requestBuilder
-                .addDataType(DataType.TYPE_SLEEP_SEGMENT)
-                .deleteAllSessions()
-                .build();
 
-        FitnessOptions fitnessOptions = createWorkoutFitnessOptions(FitnessOptions.ACCESS_WRITE);
+            DataDeleteRequest.Builder requestBuilder = new DataDeleteRequest.Builder()
+                    .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
 
-        Fitness.getHistoryClient(this.mReactContext, GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions))
-                .deleteData(request)
-                .addOnSuccessListener(unused -> promise.resolve(true))
-                .addOnFailureListener(e -> promise.reject(e));
+            DataDeleteRequest request = requestBuilder
+                    .addDataType(DataType.TYPE_SLEEP_SEGMENT)
+                    .deleteAllSessions()
+                    .build();
+
+            FitnessOptions fitnessOptions = createWorkoutFitnessOptions(FitnessOptions.ACCESS_WRITE);
+
+            Fitness.getHistoryClient(this.mReactContext, GoogleSignIn.getAccountForExtension(this.mReactContext, fitnessOptions))
+                    .deleteData(request)
+                    .addOnSuccessListener(unused -> promise.resolve(true))
+                    .addOnFailureListener(e -> promise.reject(e));
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
+        }
     }
 
     //private helper functions

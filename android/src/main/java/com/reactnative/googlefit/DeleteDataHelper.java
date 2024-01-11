@@ -28,14 +28,19 @@ class DeleteDataHelper extends AsyncTask<Void, Void, Void> {
 
   @Override
   protected Void doInBackground(Void... params) {
-    DataDeleteRequest request = new DataDeleteRequest.Builder()
-      .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-      .addDataType(this.dataType)
-      .build();
+    try {
 
-    Fitness.HistoryApi.deleteData(googleFitManager.getGoogleApiClient(), request)
-      .await(1, TimeUnit.MINUTES);
 
+      DataDeleteRequest request = new DataDeleteRequest.Builder()
+              .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+              .addDataType(this.dataType)
+              .build();
+
+      Fitness.HistoryApi.deleteData(googleFitManager.getGoogleApiClient(), request)
+              .await(1, TimeUnit.MINUTES);
+    }catch (Throwable e){
+      HelperUtil.displayMessage(this.getClass().getName());
+    }
     return null;
   }
 }

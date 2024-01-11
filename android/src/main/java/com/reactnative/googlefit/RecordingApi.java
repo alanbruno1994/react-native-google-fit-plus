@@ -64,50 +64,58 @@ public class RecordingApi {
     }
 
     public void subscribe(ReadableArray dataTypes) {
-        ArrayList<String> dataTypesList = new ArrayList<String>();
+        try {
+            ArrayList<String> dataTypesList = new ArrayList<String>();
 
-        for (Object type : dataTypes.toArrayList()) {
-            dataTypesList.add(type.toString());
-        }
-
-
-        for (String dataTypeName : dataTypesList) {
-            DataType dataType = getDataType(dataTypeName);
-
-            // Just skip unknown data types
-            if (dataType == null) {
-                continue;
+            for (Object type : dataTypes.toArrayList()) {
+                dataTypesList.add(type.toString());
             }
 
-            final String eventName = getEventName(dataTypeName);
 
-            Fitness.RecordingApi.subscribe(googleFitManager.getGoogleApiClient(), dataType)
-                    .setResultCallback(new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(@NonNull Status status) {
-                            WritableMap map = Arguments.createMap();
+            for (String dataTypeName : dataTypesList) {
+                DataType dataType = getDataType(dataTypeName);
 
-                            map.putString("type", eventName);
+                // Just skip unknown data types
+                if (dataType == null) {
+                    continue;
+                }
 
-                            if (status.isSuccess()) {
-                                map.putBoolean("recording", true);
-                                Log.i(TAG, "RecordingAPI - Connected");
-                                sendEvent(reactContext, eventName, map);
-                            } else {
-                                map.putBoolean("recording", false);
-                                Log.i(TAG, "RecordingAPI - Error connecting");
-                                sendEvent(reactContext, eventName, map);
+                final String eventName = getEventName(dataTypeName);
+
+                Fitness.RecordingApi.subscribe(googleFitManager.getGoogleApiClient(), dataType)
+                        .setResultCallback(new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(@NonNull Status status) {
+                                WritableMap map = Arguments.createMap();
+
+                                map.putString("type", eventName);
+
+                                if (status.isSuccess()) {
+                                    map.putBoolean("recording", true);
+                                    Log.i(TAG, "RecordingAPI - Connected");
+                                    sendEvent(reactContext, eventName, map);
+                                } else {
+                                    map.putBoolean("recording", false);
+                                    Log.i(TAG, "RecordingAPI - Error connecting");
+                                    sendEvent(reactContext, eventName, map);
+                                }
                             }
-                        }
-                    });
+                        });
+            }
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
         }
     }
 
 
     private void sendEvent(ReactContext reactContext,
         String eventName, @Nullable WritableMap params) {
-        reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
+        try {
+            reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(eventName, params);
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
+        }
     }
 }

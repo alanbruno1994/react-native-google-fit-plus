@@ -89,33 +89,37 @@ public class DistanceHistory {
 
 
     private void processDataSet(DataSet dataSet, WritableArray map) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
-        DateFormat dateFormat = DateFormat.getDateInstance();
-        DateFormat timeFormat = DateFormat.getTimeInstance();
-        Format formatter = new SimpleDateFormat("EEE");
+        try {
+            Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            DateFormat timeFormat = DateFormat.getTimeInstance();
+            Format formatter = new SimpleDateFormat("EEE");
 
-        WritableMap stepMap = Arguments.createMap();
+            WritableMap stepMap = Arguments.createMap();
 
 
-        for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            for (DataPoint dp : dataSet.getDataPoints()) {
+                Log.i(TAG, "Data point:");
+                Log.i(TAG, "\tType: " + dp.getDataType().getName());
+                Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
 
-            String day = formatter.format(new Date(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "Day: " + day);
+                String day = formatter.format(new Date(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                Log.i(TAG, "Day: " + day);
 
-            for(Field field : dp.getDataType().getFields()) {
-                Log.i("History", "\tField: " + field.getName() +
-                        " Value: " + dp.getValue(field));
+                for (Field field : dp.getDataType().getFields()) {
+                    Log.i("History", "\tField: " + field.getName() +
+                            " Value: " + dp.getValue(field));
 
-                stepMap.putString("day", day);
-                stepMap.putDouble("startDate", dp.getStartTime(TimeUnit.MILLISECONDS));
-                stepMap.putDouble("endDate", dp.getEndTime(TimeUnit.MILLISECONDS));
-                stepMap.putDouble("distance", dp.getValue(field).asFloat());
-                map.pushMap(stepMap);
+                    stepMap.putString("day", day);
+                    stepMap.putDouble("startDate", dp.getStartTime(TimeUnit.MILLISECONDS));
+                    stepMap.putDouble("endDate", dp.getEndTime(TimeUnit.MILLISECONDS));
+                    stepMap.putDouble("distance", dp.getValue(field).asFloat());
+                    map.pushMap(stepMap);
+                }
             }
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
         }
     }
 

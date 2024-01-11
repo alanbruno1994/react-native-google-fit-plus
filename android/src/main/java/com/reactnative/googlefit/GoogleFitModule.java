@@ -39,12 +39,15 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
 
     private static final String REACT_MODULE = "RNGoogleFit";
     private ReactContext mReactContext;
+
+    public  static ReactContext context;
     private GoogleFitManager mGoogleFitManager = null;
     private String GOOGLE_FIT_APP_URI = "com.google.android.apps.fitness";
 
     public GoogleFitModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.mReactContext = reactContext;
+        GoogleFitModule.context=reactContext;
     }
 
 

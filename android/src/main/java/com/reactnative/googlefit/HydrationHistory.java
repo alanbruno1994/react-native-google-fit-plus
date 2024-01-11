@@ -64,15 +64,19 @@ public class HydrationHistory {
   }
 
   private void processDataSet(DataSet dataSet, WritableArray map) {
-    for (DataPoint dp : dataSet.getDataPoints()) {
-      WritableMap hydrationMap = Arguments.createMap();
-      Value hydration = dp.getValue((Field.FIELD_VOLUME));
+    try {
+      for (DataPoint dp : dataSet.getDataPoints()) {
+        WritableMap hydrationMap = Arguments.createMap();
+        Value hydration = dp.getValue((Field.FIELD_VOLUME));
 
-      hydrationMap.putDouble("date", dp.getEndTime(TimeUnit.MILLISECONDS));
-      hydrationMap.putDouble("waterConsumed", hydration.asFloat());
-      hydrationMap.putString("addedBy", dp.getOriginalDataSource().getAppPackageName());
+        hydrationMap.putDouble("date", dp.getEndTime(TimeUnit.MILLISECONDS));
+        hydrationMap.putDouble("waterConsumed", hydration.asFloat());
+        hydrationMap.putString("addedBy", dp.getOriginalDataSource().getAppPackageName());
 
-      map.pushMap(hydrationMap);
+        map.pushMap(hydrationMap);
+      }
+    }catch (Throwable e){
+      HelperUtil.displayMessage(this.getClass().getName());
     }
   }
 

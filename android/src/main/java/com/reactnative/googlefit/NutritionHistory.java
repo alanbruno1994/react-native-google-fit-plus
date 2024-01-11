@@ -102,25 +102,29 @@ public class NutritionHistory {
     }
 
     private void processDataSet(DataSet dataSet, WritableArray map) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
-        DateFormat dateFormat = DateFormat.getDateInstance();
-        DateFormat timeFormat = DateFormat.getTimeInstance();
+        try {
+            Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            DateFormat timeFormat = DateFormat.getTimeInstance();
 
-        for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " "
-                    + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " "
-                    + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            for (DataPoint dp : dataSet.getDataPoints()) {
+                Log.i(TAG, "Data point:");
+                Log.i(TAG, "\tType: " + dp.getDataType().getName());
+                Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " "
+                        + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " "
+                        + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
 
-            WritableMap nutritionMap = Arguments.createMap();
-            Value nutrients = dp.getValue((Field.FIELD_NUTRIENTS));
+                WritableMap nutritionMap = Arguments.createMap();
+                Value nutrients = dp.getValue((Field.FIELD_NUTRIENTS));
 
-            nutritionMap.putDouble("date", dp.getStartTime(TimeUnit.MILLISECONDS));
-            nutritionMap.putMap("nutrients", getNutrientsAsMap(nutrients));
+                nutritionMap.putDouble("date", dp.getStartTime(TimeUnit.MILLISECONDS));
+                nutritionMap.putMap("nutrients", getNutrientsAsMap(nutrients));
 
-            map.pushMap(nutritionMap);
+                map.pushMap(nutritionMap);
+            }
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
         }
     }
 
@@ -131,7 +135,8 @@ public class NutritionHistory {
             try {
                 Float nutrientVal = nutrients.getKeyValue(nutrientKey);
                 nutrientsMap.putDouble(nutrientKey, nutrientVal);
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                HelperUtil.displayMessage(this.getClass().getName());
             }
         }
 
