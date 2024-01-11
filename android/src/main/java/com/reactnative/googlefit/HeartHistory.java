@@ -28,30 +28,35 @@ public class HeartHistory {
     }
 
     public void saveHeart(long startTime,long endTime, float value, Promise promise) {
-        DataSource dataSource = new DataSource.Builder()
-                .setAppPackageName(this.mReactContext.getPackageName())
-                .setDataType(DataType.TYPE_HEART_RATE_BPM)
-                .setType(DataSource.TYPE_RAW)
-                .build();
+        try {
+            DataSource dataSource = new DataSource.Builder()
+                    .setAppPackageName(this.mReactContext.getPackageName())
+                    .setDataType(DataType.TYPE_HEART_RATE_BPM)
+                    .setType(DataSource.TYPE_RAW)
+                    .build();
 
-        DataSet dataSet = DataSet.create(dataSource);
-        DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-        dataPoint.getValue(Field.FIELD_BPM).setFloat(value);
-        dataSet.add(dataPoint);
+            DataSet dataSet = DataSet.create(dataSource);
+            DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+            dataPoint.getValue(Field.FIELD_BPM).setFloat(value);
+            dataSet.add(dataPoint);
 
-        Fitness.getHistoryClient(this.mReactContext, GoogleSignIn.getLastSignedInAccount(this.mReactContext))
-                .insertData(dataSet)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                       promise.resolve(true);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        promise.resolve(false);
-                    }
-                });
+            Fitness.getHistoryClient(this.mReactContext, GoogleSignIn.getLastSignedInAccount(this.mReactContext))
+                    .insertData(dataSet)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            promise.resolve(true);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    promise.resolve(false);
+                }
+            });
+        }catch (Throwable e){
+            Log.error(this.getClass().getName(),e.getMessage());
+            HelperUtil.displayMessage(this.getClass().getName());
+        }
     }
 
 

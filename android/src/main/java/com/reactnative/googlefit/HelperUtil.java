@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import android.widget.Toast;
 
 final class HelperUtil {
     public static TimeUnit processBucketUnit(String buckUnit) {
@@ -122,5 +123,15 @@ final class HelperUtil {
                 wtArray.pushMap(innerMap);
             }
         }
+    }
+
+    public static void displayMessage(ReactContext mReactContext, String mensagem){
+        try {
+            Toast toast = Toast.makeText(context, "Failure - "+mensagem, Toast.LENGTH_SHORT);
+            toast.show();
+        }catch (Throwable e){
+
+        }
+
     }
 }

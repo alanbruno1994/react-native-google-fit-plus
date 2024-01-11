@@ -80,32 +80,36 @@ public class StepSensor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Sensor mySensor = sensorEvent.sensor;
+        try {
+            Sensor mySensor = sensorEvent.sensor;
 
-        Log.i(TAG, "onSensorChanged");
+            Log.i(TAG, "onSensorChanged");
 
 
+            if (mySensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+                WritableMap map = Arguments.createMap();
 
-        if (mySensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            WritableMap map = Arguments.createMap();
+                long curTime = System.currentTimeMillis();
+                //i++;
+                if ((curTime - lastUpdate) > delay) {
+                    final Object o = sensorEvent.values[0];
+                    Log.i("History", "Data point:" + sensorEvent.values[0]);
 
-            long curTime = System.currentTimeMillis();
-            //i++;
-            if ((curTime - lastUpdate) > delay) {
-                final Object o = sensorEvent.values[0];
-                Log.i("History", "Data point:" + sensorEvent.values[0]);
+                    map.putDouble("steps", sensorEvent.values[0]);
+                    sendEvent(this.mReactContext, "StepSensorChangedEvent", map);
 
-                map.putDouble("steps", sensorEvent.values[0]);
-                sendEvent(this.mReactContext, "StepSensorChangedEvent", map);
-
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mReactContext.getApplicationContext(), "" + o, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                lastUpdate = curTime;
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mReactContext.getApplicationContext(), "" + o, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    lastUpdate = curTime;
+                }
             }
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
+            Log.error(this.getClass().getName(),e.getMessage());
         }
     }
 
@@ -117,9 +121,14 @@ public class StepSensor implements SensorEventListener {
     private void sendEvent(ReactContext reactContext,
                            String eventName,
                            @Nullable WritableMap params) {
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(eventName, params);
+        try {
+            reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(eventName, params);
+        }catch (Throwable e){
+            HelperUtil.displayMessage(this.getClass().getName());
+            Log.error(this.getClass().getName(),e.getMessage());
+        }
     }
 
 }

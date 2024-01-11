@@ -60,8 +60,9 @@ public class StepHistorySave {
                     });
 
 
-        } catch (Exception e) {
-
+        } catch (Throwable e) {
+            HelperUtil.displayMessage(this.getClass().getName());
+            Log.error(this.getClass().getName(),e.getMessage());
         }
     }
 
